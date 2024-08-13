@@ -10,7 +10,6 @@ import ColorSchemeGenerator from './ColorSchemeGenerator'
 import ColorHistory from './ColorHistory'
 import ExportOptions from './ExportOptions'
 import ColorBlindnessSimulator from './ColorBlindnessSimulator'
-import ColorNamer from './ColorNamer'
 import ColorImageExtractor from './ColorImageExtractor'
 
 export default function ColorExplorer() {
@@ -124,7 +123,6 @@ export default function ColorExplorer() {
         <div>
           <ColorPicker color={baseColor} onChange={setBaseColor} />
           <ColorInfo color={baseColor} />
-          <ColorNamer color={baseColor} />
         </div>
         <div>
           <ColorHarmony harmony={harmony} onChange={setHarmony} />
