@@ -9,6 +9,9 @@ import ColorAccessibility from './ColorAccessibility'
 import ColorSchemeGenerator from './ColorSchemeGenerator'
 import ColorHistory from './ColorHistory'
 import ExportOptions from './ExportOptions'
+import ColorBlindnessSimulator from './ColorBlindnessSimulator'
+import ColorNamer from './ColorNamer'
+import ColorImageExtractor from './ColorImageExtractor'
 
 export default function ColorExplorer() {
   const [baseColor, setBaseColor] = useState('#3B82F6')
@@ -116,20 +119,23 @@ export default function ColorExplorer() {
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-6xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <ColorPicker color={baseColor} onChange={setBaseColor} />
           <ColorInfo color={baseColor} />
+          <ColorNamer color={baseColor} />
         </div>
         <div>
           <ColorHarmony harmony={harmony} onChange={setHarmony} />
-          <ColorPalette palette={palette} />
         </div>
       </div>
+      <ColorPalette palette={palette} />
+      <ColorSchemeGenerator baseColor={baseColor} />
       <GradientGenerator gradient={gradient} setGradient={setGradient} />
       <ColorAccessibility color1={baseColor} color2={palette[1] || '#ffffff'} />
-      <ColorSchemeGenerator baseColor={baseColor} />
+      <ColorBlindnessSimulator color={baseColor} />
+      <ColorImageExtractor onColorExtract={setBaseColor} />
       <ColorHistory history={colorHistory} onSelect={setBaseColor} />
       <ExportOptions palette={palette} gradient={gradient} />
     </div>

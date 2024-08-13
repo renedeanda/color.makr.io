@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <Head>
-        <title>Color Explorer: Palette Generator for Designers & Developers</title>
-        <meta name="description" content="Explore, generate, and analyze color palettes with our comprehensive color tool. Perfect for designers and developers seeking inspiration and color harmony." />
+        <title>Color Explorer: Advanced Palette Generator for Designers & Developers</title>
+        <meta name="description" content="Explore, generate, and analyze color palettes with our comprehensive color tool. Features include color wheel, accessibility checker, color blindness simulator, and more. Perfect for designers and developers seeking inspiration and color harmony." />
         <link rel="icon" href="/favicon.svg" />
       </Head>
 
@@ -18,7 +18,7 @@ export default function Home() {
           <span className="ml-2" role="img" aria-label="Rainbow">🌈</span>
         </h1>
         <p className="text-center mb-8 text-gray-600 dark:text-gray-400">
-          Discover harmonious color palettes for your next project
+          Discover and analyze harmonious color palettes for your next project
         </p>
         <ColorExplorer />
       </main>

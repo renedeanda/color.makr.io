@@ -11,15 +11,11 @@ def main():
         print("Error: Make sure you run this script from the root of your color-explorer project.")
         return
 
-    # Update favicon SVG to resemble the art palette emoji
+    # Update favicon SVG
     favicon_svg = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="45" fill="#F4AA41"/>
-  <circle cx="30" cy="35" r="10" fill="#BE0027"/>
-  <circle cx="50" cy="25" r="10" fill="#F8D000"/>
-  <circle cx="70" cy="35" r="10" fill="#239F40"/>
-  <circle cx="75" cy="55" r="10" fill="#00A2E8"/>
-  <path d="M50 95 Q20 80 20 50 A30 30 0 0 1 80 50 Q80 80 50 95" fill="#8C6239"/>
+  <rect x="10" y="10" width="80" height="80" rx="20" ry="20" fill="#F4AA41"/>
+  <text x="50" y="50" font-family="Arial, sans-serif" font-size="60" text-anchor="middle" dominant-baseline="central">🎨</text>
 </svg>
     '''
     update_file('public/favicon.svg', favicon_svg)
@@ -36,6 +32,10 @@ import ColorAccessibility from './ColorAccessibility'
 import ColorSchemeGenerator from './ColorSchemeGenerator'
 import ColorHistory from './ColorHistory'
 import ExportOptions from './ExportOptions'
+import ColorBlindnessSimulator from './ColorBlindnessSimulator'
+import ColorNamer from './ColorNamer'
+import ColorWheel from './ColorWheel'
+import ColorImageExtractor from './ColorImageExtractor'
 
 export default function ColorExplorer() {
   const [baseColor, setBaseColor] = useState('#3B82F6')
@@ -143,20 +143,24 @@ export default function ColorExplorer() {
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-6xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <ColorPicker color={baseColor} onChange={setBaseColor} />
           <ColorInfo color={baseColor} />
+          <ColorNamer color={baseColor} />
         </div>
         <div>
+          <ColorWheel color={baseColor} onChange={setBaseColor} />
           <ColorHarmony harmony={harmony} onChange={setHarmony} />
-          <ColorPalette palette={palette} />
         </div>
       </div>
+      <ColorPalette palette={palette} />
+      <ColorSchemeGenerator baseColor={baseColor} />
       <GradientGenerator gradient={gradient} setGradient={setGradient} />
       <ColorAccessibility color1={baseColor} color2={palette[1] || '#ffffff'} />
-      <ColorSchemeGenerator baseColor={baseColor} />
+      <ColorBlindnessSimulator color={baseColor} />
+      <ColorImageExtractor onColorExtract={setBaseColor} />
       <ColorHistory history={colorHistory} onSelect={setBaseColor} />
       <ExportOptions palette={palette} gradient={gradient} />
     </div>
@@ -308,8 +312,7 @@ export default function ColorHarmony({ harmony, onChange }) {
     '''
     update_file('components/ColorHarmony.js', color_harmony_js)
 
-    # Update ColorPalette component
-
+# Continuing the ColorPalette component
     color_palette_js = '''
 export default function ColorPalette({ palette }) {
   return (
@@ -620,7 +623,364 @@ export default function ExportOptions({ palette, gradient }) {
     '''
     update_file('components/ExportOptions.js', export_options_js)
 
-    # Update index.js to include new layout and components
+    # Continuing the ColorBlindnessSimulator component
+    color_blindness_simulator_js = '''
+import { useState, useEffect } from 'react'
+
+export default function ColorBlindnessSimulator({ color }) {
+  const [simulatedColors, setSimulatedColors] = useState({})
+
+  useEffect(() => {
+    setSimulatedColors({
+      protanopia: simulateColorBlindness(color, 'protanopia'),
+      deuteranopia: simulateColorBlindness(color, 'deuteranopia'),
+      tritanopia: simulateColorBlindness(color, 'tritanopia'),
+    })
+  }, [color])
+
+  function simulateColorBlindness(hex, type) {
+    const rgb = hexToRgb(hex)
+    let simulated
+
+    switch (type) {
+      case 'protanopia':
+        simulated = [
+          0.567 * rgb.r + 0.433 * rgb.g + 0.0 * rgb.b,
+          0.558 * rgb.r + 0.442 * rgb.g + 0.0 * rgb.b,
+          0.0 * rgb.r + 0.242 * rgb.g + 0.758 * rgb.b
+        ]
+        break
+      case 'deuteranopia':
+        simulated = [
+          0.625 * rgb.r + 0.375 * rgb.g + 0.0 * rgb.b,
+          0.7 * rgb.r + 0.3 * rgb.g + 0.0 * rgb.b,
+          0.0 * rgb.r + 0.3 * rgb.g + 0.7 * rgb.b
+        ]
+        break
+      case 'tritanopia':
+        simulated = [
+          0.95 * rgb.r + 0.05 * rgb.g + 0.0 * rgb.b,
+          0.0 * rgb.r + 0.433 * rgb.g + 0.567 * rgb.b,
+          0.0 * rgb.r + 0.475 * rgb.g + 0.525 * rgb.b
+        ]
+        break
+      default:
+        simulated = [rgb.r, rgb.g, rgb.b]
+    }
+
+    return rgbToHex(Math.round(simulated[0]), Math.round(simulated[1]), Math.round(simulated[2]))
+  }
+
+  function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null
+  }
+
+  function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+  }
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Color Blindness Simulation</h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div>
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Original</p>
+          <div className="w-full h-20 rounded-md" style={{ backgroundColor: color }}></div>
+        </div>
+        {Object.entries(simulatedColors).map(([type, simulatedColor]) => (
+          <div key={type}>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{type}</p>
+            <div className="w-full h-20 rounded-md" style={{ backgroundColor: simulatedColor }}></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+    '''
+    update_file('components/ColorBlindnessSimulator.js', color_blindness_simulator_js)
+
+    # Create ColorNamer component
+    color_namer_js = '''
+import { useState, useEffect } from 'react'
+
+const colorNames = {
+  '#FF0000': 'Red',
+  '#00FF00': 'Green',
+  '#0000FF': 'Blue',
+  '#FFFF00': 'Yellow',
+  '#FF00FF': 'Magenta',
+  '#00FFFF': 'Cyan',
+  '#FFA500': 'Orange',
+  '#800080': 'Purple',
+  '#FFC0CB': 'Pink',
+  '#A52A2A': 'Brown',
+  '#808080': 'Gray',
+  '#FFFFFF': 'White',
+  '#000000': 'Black'
+}
+
+export default function ColorNamer({ color }) {
+  const [colorName, setColorName] = useState('')
+
+  useEffect(() => {
+    setColorName(findNearestColorName(color))
+  }, [color])
+
+  function findNearestColorName(hexColor) {
+    let nearestColor = Object.keys(colorNames)[0]
+    let minDistance = Number.MAX_VALUE
+
+    for (let namedColor in colorNames) {
+      const distance = calculateColorDistance(hexColor, namedColor)
+      if (distance < minDistance) {
+        minDistance = distance
+        nearestColor = namedColor
+      }
+    }
+
+    return colorNames[nearestColor]
+  }
+
+  function calculateColorDistance(color1, color2) {
+    const rgb1 = hexToRgb(color1)
+    const rgb2 = hexToRgb(color2)
+
+    return Math.sqrt(
+      Math.pow(rgb1.r - rgb2.r, 2) +
+      Math.pow(rgb1.g - rgb2.g, 2) +
+      Math.pow(rgb1.b - rgb2.b, 2)
+    )
+  }
+
+  function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null
+  }
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mt-4">
+      <h2 className="text-xl font-bold mb-2 text-gray-800 dark:text-gray-200">Color Name</h2>
+      <p className="text-lg text-gray-700 dark:text-gray-300">{colorName}</p>
+    </div>
+  )
+}
+    '''
+    update_file('components/ColorNamer.js', color_namer_js)
+
+    # Create ColorWheel component
+    color_wheel_js = '''
+import { useEffect, useRef } from 'react'
+
+export default function ColorWheel({ color, onChange }) {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    const centerX = canvas.width / 2
+    const centerY = canvas.height / 2
+    const radius = Math.min(centerX, centerY) - 5
+
+    // Draw color wheel
+    for (let angle = 0; angle < 360; angle++) {
+      const startAngle = (angle - 2) * Math.PI / 180
+      const endAngle = (angle + 2) * Math.PI / 180
+
+      ctx.beginPath()
+      ctx.moveTo(centerX, centerY)
+      ctx.arc(centerX, centerY, radius, startAngle, endAngle)
+      ctx.closePath()
+
+      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius)
+      gradient.addColorStop(0, '#FFFFFF')
+      gradient.addColorStop(1, `hsl(${angle}, 100%, 50%)`)
+      
+      ctx.fillStyle = gradient
+      ctx.fill()
+    }
+
+    // Draw color indicator
+    const hsl = hexToHsl(color)
+    const indicatorAngle = hsl.h * Math.PI / 180
+    const indicatorRadius = radius * (1 - hsl.s / 100)
+    
+    ctx.beginPath()
+    ctx.arc(
+      centerX + indicatorRadius * Math.cos(indicatorAngle),
+      centerY - indicatorRadius * Math.sin(indicatorAngle),
+      8, 0, 2 * Math.PI
+    )
+    ctx.fillStyle = color
+    ctx.strokeStyle = hsl.l > 50 ? '#000000' : '#FFFFFF'
+    ctx.lineWidth = 2
+    ctx.fill()
+    ctx.stroke()
+  }, [color])
+
+  const handleCanvasClick = (event) => {
+    const canvas = canvasRef.current
+    const rect = canvas.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+    
+    const centerX = canvas.width / 2
+    const centerY = canvas.height / 2
+    const radius = Math.min(centerX, centerY) - 5
+
+    const dx = x - centerX
+    const dy = y - centerY
+    const distance = Math.sqrt(dx * dx + dy * dy)
+
+    if (distance <= radius) {
+      const angle = (Math.atan2(-dy, dx) + Math.PI) * 180 / Math.PI
+      const saturation = Math.min(distance / radius * 100, 100)
+      
+      const hsl = { h: angle, s: saturation, l: 50 }
+      onChange(hslToHex(hsl))
+    }
+  }
+
+  function hexToHsl(hex) {
+    const rgb = hexToRgb(hex)
+    const r = rgb.r / 255
+    const g = rgb.g / 255
+    const b = rgb.b / 255
+    const max = Math.max(r, g, b), min = Math.min(r, g, b)
+    let h, s, l = (max + min) / 2
+
+    if (max === min) {
+      h = s = 0
+    } else {
+      const d = max - min
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break
+        case g: h = (b - r) / d + 2; break
+        case b: h = (r - g) / d + 4; break
+      }
+      h /= 6
+    }
+
+    return { h: h * 360, s: s * 100, l: l * 100 }
+  }
+
+  function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null
+  }
+
+  function hslToHex({ h, s, l }) {
+    l /= 100
+    const a = s * Math.min(l, 1 - l) / 100
+    const f = n => {
+      const k = (n + h / 30) % 12
+      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
+      return Math.round(255 * color).toString(16).padStart(2, '0')
+    }
+    return `#${f(0)}${f(8)}${f(4)}`
+  }
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Color Wheel</h2>
+      <canvas
+        ref={canvasRef}
+        width={300}
+        height={300}
+        onClick={handleCanvasClick}
+        className="mx-auto cursor-pointer"
+      ></canvas>
+    </div>
+  )
+}
+    '''
+    update_file('components/ColorWheel.js', color_wheel_js)
+
+    # Create ColorImageExtractor component
+    color_image_extractor_js = '''
+import { useState } from 'react'
+
+export default function ColorImageExtractor({ onColorExtract }) {
+  const [imagePreview, setImagePreview] = useState(null)
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setImagePreview(e.target.result)
+        extractColor(e.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const extractColor = (imageSrc) => {
+    const img = new Image()
+    img.crossOrigin = 'Anonymous'
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.width = img.width
+      canvas.height = img.height
+      ctx.drawImage(img, 0, 0, img.width, img.height)
+      
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      const data = imageData.data
+      let r = 0, g = 0, b = 0
+
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i]
+        g += data[i + 1]
+        b += data[i + 2]
+      }
+
+      r = Math.floor(r / (data.length / 4))
+      g = Math.floor(g / (data.length / 4))
+      b = Math.floor(b / (data.length / 4))
+
+      const hex = rgbToHex(r, g, b)
+      onColorExtract(hex)
+    }
+    img.src = imageSrc
+  }
+
+  function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+  }
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Extract Color from Image</h2>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        className="mb-4"
+      />
+      {imagePreview && (
+        <img src={imagePreview} alt="Uploaded" className="max-w-full h-auto mb-4 rounded-lg" />
+      )}
+    </div>
+  )
+}
+    '''
+    update_file('components/ColorImageExtractor.js', color_image_extractor_js)
+# Continuing the index.js file
     index_js = '''
 import Head from 'next/head'
 import ColorExplorer from '@/components/ColorExplorer'
@@ -629,8 +989,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <Head>
-        <title>Color Explorer: Palette Generator for Designers & Developers</title>
-        <meta name="description" content="Explore, generate, and analyze color palettes with our comprehensive color tool. Perfect for designers and developers seeking inspiration and color harmony." />
+        <title>Color Explorer: Advanced Palette Generator for Designers & Developers</title>
+        <meta name="description" content="Explore, generate, and analyze color palettes with our comprehensive color tool. Features include color wheel, accessibility checker, color blindness simulator, and more. Perfect for designers and developers seeking inspiration and color harmony." />
         <link rel="icon" href="/favicon.svg" />
       </Head>
 
@@ -641,7 +1001,7 @@ export default function Home() {
           <span className="ml-2" role="img" aria-label="Rainbow">🌈</span>
         </h1>
         <p className="text-center mb-8 text-gray-600 dark:text-gray-400">
-          Discover harmonious color palettes for your next project
+          Discover and analyze harmonious color palettes for your next project
         </p>
         <ColorExplorer />
       </main>
@@ -652,7 +1012,7 @@ export default function Home() {
     update_file('pages/index.js', index_js)
 
     print("Update complete! The Color Explorer has been enhanced with new features and improved styling.")
-    print("New components added: ColorHistory and ExportOptions.")
+    print("New components added: ColorBlindnessSimulator, ColorNamer, ColorWheel, and ColorImageExtractor.")
     print("To see the changes, restart your development server if it's running.")
 
 if __name__ == "__main__":
