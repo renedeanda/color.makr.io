@@ -20,9 +20,19 @@ export default function Home() {
         <p className="text-center mb-8 text-gray-600 dark:text-gray-400">
           Discover and analyze harmonious color palettes for your next project
         </p>
+        <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-8">
+          Crafted with <span className="text-red-500 animate-pulse inline-block">❤️</span> and <span role="img" aria-label="AI">🤖</span> by{' '}
+          <a
+            href="https://renedeanda.com/?utm_source=countries"
+            className="text-blue-400 hover:text-blue-600 transition-colors duration-300 font-medium hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            René DeAnda
+          </a>
+        </p>
         <ColorExplorer />
       </main>
     </div>
   )
 }
-    
