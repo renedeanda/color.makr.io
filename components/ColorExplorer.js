@@ -3,14 +3,23 @@ import { useState, useEffect } from 'react'
 import ColorPicker from './ColorPicker'
 import ColorPalette from './ColorPalette'
 import ColorHarmony from './ColorHarmony'
+import ColorInfo from './ColorInfo'
+import GradientGenerator from './GradientGenerator'
+import ColorAccessibility from './ColorAccessibility'
+import ColorSchemeGenerator from './ColorSchemeGenerator'
+import ColorHistory from './ColorHistory'
+import ExportOptions from './ExportOptions'
 
 export default function ColorExplorer() {
   const [baseColor, setBaseColor] = useState('#3B82F6')
   const [palette, setPalette] = useState([])
   const [harmony, setHarmony] = useState('complementary')
+  const [gradient, setGradient] = useState({ start: '#3B82F6', end: '#ffffff' })
+  const [colorHistory, setColorHistory] = useState([])
 
   useEffect(() => {
     generatePalette()
+    addToHistory(baseColor)
   }, [baseColor, harmony])
 
   const generatePalette = () => {
@@ -45,6 +54,13 @@ export default function ColorExplorer() {
     }
 
     setPalette(newPalette)
+  }
+
+  const addToHistory = (color) => {
+    setColorHistory(prev => {
+      const newHistory = [color, ...prev.filter(c => c !== color)]
+      return newHistory.slice(0, 10) // Keep only the last 10 colors
+    })
   }
 
   const getComplementaryColor = (hsl) => {
@@ -100,10 +116,22 @@ export default function ColorExplorer() {
   }
 
   return (
-    <div className="space-y-8">
-      <ColorPicker color={baseColor} onChange={setBaseColor} />
-      <ColorHarmony harmony={harmony} onChange={setHarmony} />
-      <ColorPalette palette={palette} />
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <ColorPicker color={baseColor} onChange={setBaseColor} />
+          <ColorInfo color={baseColor} />
+        </div>
+        <div>
+          <ColorHarmony harmony={harmony} onChange={setHarmony} />
+          <ColorPalette palette={palette} />
+        </div>
+      </div>
+      <GradientGenerator gradient={gradient} setGradient={setGradient} />
+      <ColorAccessibility color1={baseColor} color2={palette[1] || '#ffffff'} />
+      <ColorSchemeGenerator baseColor={baseColor} />
+      <ColorHistory history={colorHistory} onSelect={setBaseColor} />
+      <ExportOptions palette={palette} gradient={gradient} />
     </div>
   )
 }
