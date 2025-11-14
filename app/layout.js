@@ -1,4 +1,5 @@
 import './globals.css'
+import Footer from '@/components/Footer'
 
 export const metadata = {
   metadataBase: new URL('https://color.makr.io'),
@@ -86,8 +87,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head />
       <body className="min-h-screen mesh-gradient font-sans">
-        <div className="min-h-screen backdrop-blur-3xl">
-          {children}
+        <div className="min-h-screen backdrop-blur-3xl flex flex-col">
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
         </div>
       </body>
     </html>

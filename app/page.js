@@ -42,8 +42,32 @@ const tools = [
     name: 'Shade & Tint Generator',
     description: 'Generate lighter and darker variations of any color with precision control',
     href: '/tools/shade-generator',
-    icon: '🎨',
+    icon: '🔆',
     gradient: 'from-red-500 to-pink-500'
+  },
+  {
+    name: 'Image Color Extractor',
+    description: 'Upload images and extract their dominant colors to create palettes',
+    href: '/tools/image-extractor',
+    icon: '🖼️',
+    gradient: 'from-teal-500 to-cyan-500'
+  }
+]
+
+const collections = [
+  {
+    name: 'Named Colors',
+    description: 'Browse 150+ CSS named colors with detailed information',
+    href: '/collections/named-colors',
+    icon: '📚',
+    gradient: 'from-indigo-500 to-purple-500'
+  },
+  {
+    name: 'Brand Colors',
+    description: 'Explore color palettes from 50+ popular brands',
+    href: '/collections/brand-colors',
+    icon: '🏢',
+    gradient: 'from-rose-500 to-pink-500'
   }
 ]
 
@@ -116,6 +140,30 @@ export default function Home() {
                     <CardTitle className="text-2xl mb-2">{tool.name}</CardTitle>
                     <CardDescription className="text-base">
                       {tool.description}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Collections Section */}
+        <section className="mb-16 md:mb-24">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            Color Collections
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {collections.map((collection) => (
+              <Link key={collection.href} href={collection.href}>
+                <Card className="tool-card h-full glass hover:shadow-2xl border-2">
+                  <CardHeader>
+                    <div className={`text-5xl mb-4 bg-gradient-to-br ${collection.gradient} p-4 rounded-lg inline-block`}>
+                      {collection.icon}
+                    </div>
+                    <CardTitle className="text-2xl mb-2">{collection.name}</CardTitle>
+                    <CardDescription className="text-base">
+                      {collection.description}
                     </CardDescription>
                   </CardHeader>
                 </Card>
