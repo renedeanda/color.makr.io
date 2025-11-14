@@ -214,40 +214,6 @@ export default function Home() {
             </a>
           </p>
         </section>
-
-        {/* SEO Content */}
-        <section className="max-w-4xl mx-auto prose dark:prose-invert">
-          <h2>Understanding Color Tools</h2>
-          <p>
-            Color is fundamental to design and user experience. Our suite of tools helps you work with
-            colors effectively, whether you&apos;re choosing a palette, ensuring accessibility, or
-            converting between color formats.
-          </p>
-
-          <h3>Color Picker & Converter</h3>
-          <p>
-            Convert seamlessly between HEX, RGB, HSL, and HSV color formats. Our color picker makes
-            it easy to select the perfect color and get the code you need in any format.
-          </p>
-
-          <h3>Palette Generation</h3>
-          <p>
-            Create harmonious color schemes using color theory principles. Generate complementary,
-            analogous, triadic, tetradic, and split-complementary palettes automatically.
-          </p>
-
-          <h3>Accessibility & WCAG Compliance</h3>
-          <p>
-            Ensure your color choices meet WCAG 2.1 accessibility standards with our contrast checker.
-            Test color combinations for AA and AAA compliance to make your designs accessible to everyone.
-          </p>
-
-          <h3>Color Blindness Awareness</h3>
-          <p>
-            Simulate different types of color blindness to ensure your designs are visible to all users.
-            Test your palettes against protanopia, deuteranopia, tritanopia, and other conditions.
-          </p>
-        </section>
       </div>
     </>
   )
