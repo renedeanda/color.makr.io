@@ -1,0 +1,57 @@
+{
+  "name": "Color.makr.io - Color Tools Suite",
+  "short_name": "Color Tools",
+  "description": "Professional color tools for designers and developers including color picker, palette generator, gradient creator, and more",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8B5CF6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["design", "development", "productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "label": "Color.makr.io Homepage"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Color Picker",
+      "short_name": "Picker",
+      "description": "Open the color picker tool",
+      "url": "/tools/color-picker",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Palette Generator",
+      "short_name": "Palette",
+      "description": "Generate color palettes",
+      "url": "/tools/palette-generator",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Contrast Checker",
+      "short_name": "Contrast",
+      "description": "Check color contrast",
+      "url": "/tools/contrast-checker",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
+}
