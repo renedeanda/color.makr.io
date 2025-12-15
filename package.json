@@ -1,31 +1,31 @@
 {
-      "name": "color-explorer",
-      "version": "0.1.0",
-      "private": true,
-      "scripts": {
-            "dev": "next dev",
-            "build": "next build",
-            "start": "next start",
-            "lint": "next lint"
-      },
-      "dependencies": {
-            "@radix-ui/react-slot": "^1.2.4",
-            "autoprefixer": "^10",
-            "class-variance-authority": "^0.7.1",
-            "clsx": "^2.1.1",
-            "lucide-react": "^0.553.0",
-            "next": "14.2.5",
-            "next-pwa": "^5.6.0",
-            "postcss": "^8",
-            "react": "^18",
-            "react-dom": "^18",
-            "tailwind-merge": "^3.4.0",
-            "tailwindcss": "^3.3.0"
-      },
-      "devDependencies": {
-            "@types/node": "^20",
-            "@types/react": "^18",
-            "@types/react-dom": "^18",
-            "typescript": "^5"
-      }
+  "name": "color-explorer",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
+    "autoprefixer": "^10",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.553.0",
+    "next": "14.2.35",
+    "next-pwa": "^5.6.0",
+    "postcss": "^8",
+    "react": "^18",
+    "react-dom": "^18",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
+  }
 }
